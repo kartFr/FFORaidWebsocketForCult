@@ -11,10 +11,14 @@ if not success then
     return
 end
 
-socket.OnMessage:Connect(function(message)
+local function hopServers(message)
     socket:Close()
-    TeleportService:TeleportToPlaceInstance(game.PlaceId, message, game.Players.LocalPlayer)
-end)
+    while task.wait(1) do
+        TeleportService:TeleportToPlaceInstance(game.PlaceId, message, game.Players.LocalPlayer)
+    end
+end
+
+socket.OnMessage:Connect(hopServers)
 
 local playing
 
