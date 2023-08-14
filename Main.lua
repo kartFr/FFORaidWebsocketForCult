@@ -14,6 +14,7 @@ end
 
 local function hopServers(message)
     serverHopping = true
+    localPlayer:Kick("hoppign to alek server :3")
     while task.wait(1) do
         TeleportService:TeleportToPlaceInstance(game.PlaceId, message, game.Players.LocalPlayer)
     end
