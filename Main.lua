@@ -14,7 +14,6 @@ end
 
 local function hopServers(message)
     serverHopping = true
-    print("server hopping")
     while task.wait(1) do
         TeleportService:TeleportToPlaceInstance(game.PlaceId, message, game.Players.LocalPlayer)
     end
@@ -25,6 +24,8 @@ socket.OnMessage:Connect(hopServers)
 socket.OnClose:connect(function()
     if not serverHopping then
         socket = WebSocket.connect("ws://rapid-occipital-xenon.glitch.me/?" .. localPlayer.Name)
+
+        socket.OnMessage:Connect(hopServers)
     end
 end)
 
