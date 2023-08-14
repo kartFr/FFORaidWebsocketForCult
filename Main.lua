@@ -14,6 +14,7 @@ end
 
 local function hopServers(message)
     serverHopping = true
+    print("server hopping")
     while task.wait(1) do
         TeleportService:TeleportToPlaceInstance(game.PlaceId, message, game.Players.LocalPlayer)
     end
