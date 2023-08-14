@@ -14,7 +14,6 @@ end
 
 local function hopServers(message)
     serverHopping = true
-    socket:Close()
     while task.wait(1) do
         TeleportService:TeleportToPlaceInstance(game.PlaceId, message, game.Players.LocalPlayer)
     end
