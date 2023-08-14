@@ -37,6 +37,23 @@ end
 socket.OnMessage:Connect(hopServers)
 socket.OnClose:Connect(socketClose)
 
+task.spawn((function()
+    while true do
+        pong = false
+        socket:Send("ping")
+    
+        task.wait(5)
+    
+        if not pong then
+            socket:Close()
+            socket = WebSocket.connect("ws://rapid-occipital-xenon.glitch.me/?" .. localPlayer.Name)
+    
+            socket.OnMessage:Connect(hopServers)
+            socket.OnClose:Connect(socketClose)
+        end
+    end
+end))
+
 local playing
 
 while not playing do
@@ -54,17 +71,3 @@ workspace.LiveChests.ChildAdded:connect(function(child)
     end
 end)
 
-while true do
-    pong = false
-    socket:Send("ping")
-
-    task.wait(5)
-
-    if not pong then
-        socket:Close()
-        socket = WebSocket.connect("ws://rapid-occipital-xenon.glitch.me/?" .. localPlayer.Name)
-
-        socket.OnMessage:Connect(hopServers)
-        socket.OnClose:Connect(socketClose)
-    end
-end
