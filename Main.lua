@@ -12,6 +12,7 @@ if not success then
 end
 
 socket.OnMessage:Connect(function(message)
+    socket:Close()
     TeleportService:TeleportToPlaceInstance(game.PlaceId, message, game.Players.LocalPlayer)
 end)
 
