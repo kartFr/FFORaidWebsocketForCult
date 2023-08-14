@@ -2,6 +2,7 @@ local TeleportService = game:GetService("TeleportService")
 
 local localPlayer = game.Players.LocalPlayer
 local socket
+local serverHopping = false
 
 local success = pcall(function()
     socket = WebSocket.connect("wss://rapid-occipital-xenon.glitch.me/?" .. localPlayer.Name)
@@ -12,6 +13,7 @@ if not success then
 end
 
 local function hopServers(message)
+    serverHopping = true
     socket:Close()
     while task.wait(1) do
         TeleportService:TeleportToPlaceInstance(game.PlaceId, message, game.Players.LocalPlayer)
@@ -19,6 +21,12 @@ local function hopServers(message)
 end
 
 socket.OnMessage:Connect(hopServers)
+
+socket.OnClose:connect(function()
+    if not serverHopping then
+        socket = WebSocket.connect("wss://rapid-occipital-xenon.glitch.me/?" .. localPlayer.Name)
+    end
+end)
 
 local playing
 
