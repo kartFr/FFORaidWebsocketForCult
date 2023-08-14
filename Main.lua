@@ -14,6 +14,10 @@ if not success then
 end
 
 local function hopServers(message)
+    if game.JobId == message then
+        return
+    end
+    
     if message == "pong" then
         pong = true
         return
