@@ -70,4 +70,3 @@ workspace.LiveChests.ChildAdded:connect(function(child)
         fireclickdetector(child:WaitForChild("ClickPart").ClickDetector)
     end
 end)
-
