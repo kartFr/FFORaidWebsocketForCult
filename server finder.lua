@@ -9,8 +9,6 @@ repeat
 	task.wait()
 until game:IsLoaded()
 
-getgenv().hop = true
-
 local HttpService = game:GetService("HttpService")
 local GuiService = game:GetService("GuiService")
 local TeleportService =	game:GetService("TeleportService")
@@ -38,10 +36,6 @@ local function sendwebhook(content)
 end
 
 local function hopNoChest()
-	if not hop then
-		return
-	end
-
 	serverhopping = true
 
 	if socket then
