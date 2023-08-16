@@ -1,12 +1,13 @@
+local WEBSOCKET = "ws://rapid-occipital-xenon.glitch.me/?"
 local TeleportService = game:GetService("TeleportService")
 
-local localPlayer = game.Players.LocalPlayer
+local localPlayer = game.players.localplayer
 local socket
 local serverHopping = false
 local pong = false
 
 local success = pcall(function()
-    socket = WebSocket.connect("ws://rapid-occipital-xenon.glitch.me/?" .. localPlayer.Name)
+    socket = WebSocket.connect(WEBSOCKET .. localPlayer.Name)
 end)
 
 if not success then
@@ -17,22 +18,22 @@ local function hopServers(message)
     if game.JobId == message then
         return
     end
-    
+
     if message == "pong" then
         pong = true
         return
     end
 
     serverHopping = true
-    localPlayer:Kick("hoppign to alek server :3")
+    localPlayer:Kick("hopping to server :3")
     while task.wait(1) do
-        TeleportService:TeleportToPlaceInstance(game.PlaceId, message, game.Players.LocalPlayer)
+        TeleportService:TeleportToPlaceInstance(game.PlaceId, message, localPlayer)
     end
 end
 
 local function socketClose()
     if not serverHopping then
-        socket = WebSocket.connect("ws://rapid-occipital-xenon.glitch.me/?" .. localPlayer.Name)
+        socket = WebSocket.connect(WEBSOCKET .. localPlayer.Name)
 
         socket.OnMessage:Connect(hopServers)
     end
@@ -50,7 +51,7 @@ task.spawn((function()
     
         if not pong then
             socket:Close()
-            socket = WebSocket.connect("ws://rapid-occipital-xenon.glitch.me/?" .. localPlayer.Name)
+            socket = WebSocket.connect(WEBSOCKET .. localPlayer.Name)
     
             socket.OnMessage:Connect(hopServers)
             socket.OnClose:Connect(socketClose)
@@ -62,7 +63,7 @@ local playing
 
 while not playing do
     task.wait(0.5)
-    for i,v in pairs(getconnections(game.Players.LocalPlayer.PlayerGui:WaitForChild("LoadingGUI"):WaitForChild("LoadedFrame"):WaitForChild("PlayButton").MouseButton1Up)) do
+    for i,v in pairs(getconnections(localPlayer.PlayerGui:WaitForChild("LoadingGUI"):WaitForChild("LoadedFrame"):WaitForChild("PlayButton").MouseButton1Up)) do
         playing = true
         v:Fire()
     end
@@ -70,7 +71,8 @@ end
 
 workspace.LiveChests.ChildAdded:connect(function(child)
     task.wait(3)
-    if child:WaitForChild("ChestMarker"):WaitForChild("TextLabel").Text:find(game.Players.LocalPlayer.Name) then
+    if child:WaitForChild("ChestMarker"):WaitForChild("TextLabel").Text:find(localPlayer.Name) then
         fireclickdetector(child:WaitForChild("ClickPart").ClickDetector)
     end
 end)
+
