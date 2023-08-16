@@ -1,3 +1,6 @@
+const SERVER_MESSAGE = 'secretmsg'
+const SERVER_RESET_MESSAGE = 'secretmsg2'
+
 const WebSocket = require("ws");
 const WebServer = WebSocket.Server;
 const url = require('url');
@@ -34,11 +37,11 @@ wss.on('connection',(ws, request)=>{
             console.log("message sent. (%s from %s)", message, ws.id);
         }
 
-        if (message.toString()==='SUPER SECRET MESSAGE') {
+        if (message.toString()===SERVER_RESET_MESSAGE) {
             server = false
         }
 
-        if (messageString[0]===' SUPER SECRET MESSAGE ') {
+        if (messageString[0]===SERVER_MESSAGE) {
             server = messageString[1]
             wss.clients.forEach(function each(client){
                 if(client!==ws&&client.readyState===WebSocket.OPEN&&client.id!=='unknown user'){
