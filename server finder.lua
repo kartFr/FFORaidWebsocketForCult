@@ -1,3 +1,10 @@
+local WEBSOCKET = "wss://rapid-occipital-xenon.glitch.me/"
+local WEBHOOK = "https://webhook.lewisakura.moe/api/webhooks/1139753665142464566/QYHAujAEBd6l-z290g8fsciB3ApZOBVWkSa1VV0NumcM0RcWx_r_HqilAHNk_ynKXBO3/queue"
+local LOOT_WEBHOOK = "https://discord.com/api/webhooks/1139811269860413481/1ZKD0SRWs-bkHKTZ4PdYd3oVR8O3oZhv7qENwvny7kNHwSbpyh3ih-xcnyRD67hsUeu7"
+local RESET_SERVER_MESSAGE = "secretmsg2"
+local SERVER_MESSAGE = "secretmsg"
+local USERNAME = "alekart"
+
 repeat
 	task.wait()
 until game:IsLoaded()
@@ -14,13 +21,17 @@ local playing = false
 local socket
 
 local function sendwebhook(content)
+	if not WEBHOOK then
+		return
+	end
+
 	request({
-		Url = "https://webhook.lewisakura.moe/api/webhooks/1139753665142464566/QYHAujAEBd6l-z290g8fsciB3ApZOBVWkSa1VV0NumcM0RcWx_r_HqilAHNk_ynKXBO3/queue",
+		Url = WEBHOOK,
 		Method = "POST",
 		Headers = {["Content-Type"] = "application/json"},
 		Body = HttpService:JSONEncode({
 		  content = content,
-		  username = "alekart dubs",
+		  username = "server finder",
 		  avatar_url = "https://media.tenor.com/hxSbF16puGwAAAAC/dog-dogs.gif",
 		})
 	})
@@ -34,7 +45,7 @@ local function hopNoChest()
 	serverhopping = true
 
 	if socket then
-		socket:Send("secretmsg2")
+		socket:Send(RESET_SERVER_MESSAGE)
 	end
 
 	local servers = HttpService:JSONDecode(
@@ -78,9 +89,7 @@ local function serverhop()
 		task.wait(2)
 	end
 
-	if not hop then
-		localPlayer:Kick()
-	end
+	localPlayer:Kick()
 	
 	hopNoChest()
 end
@@ -111,7 +120,7 @@ if workspace.IgnoreParts:FindFirstChild("PayloadModel") then
 		if type == "UpdatePayloadGUI" and not debounce then
 			debounce = true
 			body2 = "\nserver region: " .. game.ReplicatedStorage.ServerRegion.Value .. ", " .. game.ReplicatedStorage.ServerCountry.Value .. "\nserver name: " .. game.ReplicatedStorage.ServerName.Value .. "\ngame mode: payload\nplayercount: " .. #game.Players:GetPlayers() .. "/25\nends: <t:" .. info.Time + os.time() .. ":R>\nobjective: " .. info.MyObjective
-			body = "<@&1139789035011842121>\nusername: [alekart](https://www.roblox.com/users/27628965/profile)" .. body2
+			body = "<@&1139789035011842121>\nusername: " .. USERNAME .. body2
 			if info.MyObjective == "PUSH THE PAYLOAD" and info.Time < 120 then
 				playing = false
 				localPlayer:Kick()
@@ -137,7 +146,7 @@ end
 
 if workspace.CapturePoints.PointA:FindFirstChild("CapturePart") then
 	body2 = "\nserver region: " .. game.ReplicatedStorage.ServerRegion.Value .. ", " .. game.ReplicatedStorage.ServerCountry.Value .. "\nserver name: " .. game.ReplicatedStorage.ServerName.Value .. "\ngame mode: turf war\nplayer count: " .. #game.Players:GetPlayers() .. "/25"
-	body = "<@&1139789035011842121>\nusername: [alekart](https://www.roblox.com/users/27628965/profile)" .. body2
+	body = "<@&1139789035011842121>\nusername: " .. USERNAME .. body2
 	serverfound = true
 
 	workspace.CapturePoints.PointA.CapturePart.AncestryChanged:Connect(function()
@@ -192,12 +201,12 @@ if body then
 	end
 	
 	if sho and infernal then
-		body = body .. "\n\nbosses: <@&1139793123011211264> and <@&1139793175146418197>"
+		body = body .. "\n\nbosses: Sho and Infernal"
 	else
 		if sho then
-			body = body .. "\n\nbosses: <@&1139793123011211264>"
+			body = body .. "\n\nbosses: Sho"
 		else
-			body = body .. "\n\nbosses: <@&1139793175146418197>"
+			body = body .. "\n\nbosses: Infernal"
 		end
 	end
 	
@@ -216,7 +225,7 @@ if body then
 			end
 		end
 	
-		body = body .. "\n<@&1139945917844307999> in " .. noruLocations[closestSpawn]
+		body = body .. "\nNoru in " .. noruLocations[closestSpawn]
 	end
 	
 	local man = workspace.LiveNPCS:FindFirstChild("Business Man")
@@ -234,28 +243,36 @@ if body then
 			end
 		end
 	
-		body = body .. "\n<@&1139946877350068355> in " .. businessLocations[closestSpawn]
+		body = body .. "\nBusiness Man in " .. businessLocations[closestSpawn]
 	end
 	
-	body = body .. "\n## copy and paste:\n```\nusername: alekart" .. body2 .. "```"
-	socket = WebSocket.connect("wss://rapid-occipital-xenon.glitch.me/")
-	socket:Send("secretmsg|" .. game.JobId)
+	body = body .. "\n## copy and paste:\n```\nusername: " .. USERNAME .. body2 .. "```"
+
+	if WEBSOCKET then
+		socket = WebSocket.connect(WEBSOCKET)
+		socket:Send(SERVER_MESSAGE .. "|" .. game.JobId)
+	end
+
 
 	task.wait(5)
 	sendwebhook(body)
 end
 
 localPlayer.PlayerGui:WaitForChild("NotoficationGUI"):WaitForChild("NotoficationHolder").ChildAdded:Connect(function(child)
+	if not LOOT_WEBHOOK then
+		return
+	end
+
 	task.wait(0.5)
 
 	if string.sub(child.Text, 1, 1) == "+" then
 		request({
-		Url = "https://discord.com/api/webhooks/1139811269860413481/1ZKD0SRWs-bkHKTZ4PdYd3oVR8O3oZhv7qENwvny7kNHwSbpyh3ih-xcnyRD67hsUeu7",
+		Url = LOOT_WEBHOOK,
 		Method = "POST",
 		Headers = {["Content-Type"] = "application/json"},
 		Body = HttpService:JSONEncode({
 		  content = child.Text,
-		  username = "alekart loot L",
+		  username = "loot",
 		  avatar_url = "https://media.tenor.com/hxSbF16puGwAAAAC/dog-dogs.gif",
 		})
 	})
